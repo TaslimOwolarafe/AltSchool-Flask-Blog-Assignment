@@ -1,0 +1,11 @@
+.container {
+    margin-top: 60px;
+}
+
+.sign-up {
+    margin-top: 1rem;
+}
+
+.post-delete {
+    display: inline-block;
+}
