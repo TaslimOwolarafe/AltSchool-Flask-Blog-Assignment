@@ -20,7 +20,7 @@ flask run
 
 ## Contributing
 
-This is an assignment so might not be welcome.
+This is a school project so might not be welcome.
 
 
 
