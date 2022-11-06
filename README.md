@@ -6,7 +6,7 @@ A simple blog app created with Flask
 
 on python terminal
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 ```bash
@@ -20,7 +20,7 @@ flask run
 
 ## Contributing
 
-This is an assignments so might not be welcome.
+This is a school project so might not be welcome.
 
 
 
