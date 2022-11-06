@@ -14,7 +14,7 @@
   <body>
         <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">Navbar</a>
+              <a class="navbar-brand" href="#">Taslim Blog</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -27,7 +27,7 @@
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('logout') }}">Logout</a>
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('logout') }}">Logout {{ current_user.username }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ url_for('about') }}">Account</a>
@@ -43,11 +43,27 @@
                         <a class="nav-link active" aria-current="page" href="{{ url_for('register') }}">Register</a>
                     </li>
                     {% endif %}
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="{{ url_for('contact') }}">Contact Us</a>
+                    </li>
                 </ul>
             </div>
             </div>
           </nav>
     <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+      </div>
         {% block content %}
         
         {% endblock %}

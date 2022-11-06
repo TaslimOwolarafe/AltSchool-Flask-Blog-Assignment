@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, flash
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 # routes imports
@@ -57,6 +57,8 @@ def home():
 
 @app.route("/contact")
 def contact():
+    if request.form:
+        flash("we have gotten your response!", 'success')
     return render_template('contact.html')
 
 
@@ -64,17 +66,21 @@ def contact():
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
-
-    user = User.query.filter_by(username=username).first()
-    if user and check_password_hash(user.password, password):
-        login_user(user)
-        return redirect(url_for('home'))
-
+    if username and password:
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            flash(f"You are logged in as {current_user.username}!", 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login unsuccessful. Please check your inputs!', 'danger')
     return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
+    x = current_user
+    flash(f"You logged out {x.username}!", 'success')
     logout_user()
     return redirect(url_for('home'))
 
@@ -92,15 +98,17 @@ def register():
         user_email = User.query.filter_by(email=email).first()
         if user_name:
             username_error = 'username already exists!'
-
+            flash('username already exists!', 'danger')
         elif user_email:
             email_error = 'email already exists!'
+            flash(email_error, 'danger')
         else:
             password_hash = generate_password_hash(password)
             if check_password_hash(password_hash, confirm_password):
                 new_user = User(username=username, email=email, password=password_hash)
                 db.session.add(new_user)
                 db.session.commit()
+                flash(f'Your account has been created! You can now log in', 'success')
 
                 return redirect(url_for('login'))
 
@@ -123,13 +131,16 @@ def about():
         user_name = User.query.filter_by(username=username).first()
         user_email = User.query.filter_by(email=email).first()
         if user_name and user_name.username != current_username:
+            flash('username already exists!', 'danger')
             username_error = 'username already exists!'
         elif user_email and user_email.email != current_email:
+            flash('email already exists!', 'danger')
             email_error = 'email already exists!'
         else:
             current_user.username = username
             current_user.email = email
             db.session.commit()
+            flash('your account has been updated!', 'success')
             return redirect(url_for('about'))
 
     return render_template('about.html', title='account',
@@ -149,6 +160,7 @@ def new_post():
         post = Post(title=title, content=content, author=current_user)
         db.session.add(post)
         db.session.commit()
+        flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', legend="Create Post", 
         btn="Post", action=url_for('new_post'))
@@ -170,6 +182,7 @@ def update_post(post_id):
         post.title = title
         post.content = content
         db.session.commit()
+        flash('Your post has been updated.', 'success')
         return redirect(url_for('post', post_id=post.id))
     return render_template('create_post.html', legend="Update Post",
         title="Edit Post", post=post, btn="Update Post", action=url_for('update_post', post_id=post.id))
@@ -182,6 +195,7 @@ def delete_post(post_id):
         abort(403)
     db.session.delete(post)
     db.session.commit()
+    flash('Your post has been deleted.', 'success')
     return redirect(url_for('home'))
 
 

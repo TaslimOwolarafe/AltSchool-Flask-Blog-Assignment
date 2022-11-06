@@ -5,14 +5,14 @@
 {% block content %}
 <h3>{{ legend }}</h3>
 <form action="{{ action }}" method="POST">
-    <div class="mb-3 col-md-6">
+    <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input type="text" class="form-control" name="title" placeholder="Post Title"
         {% if post %}
         value="{{ post.title }}"
         {% endif %}>
     </div>
-    <div class="mb-3 col-md-6">
+    <div class="mb-3">
         <label for="content" class="form-label">Content</label>
         <textarea class="form-control" name="content" rows="3">{% if post %}{{ post.content }}{% endif %}</textarea>
     </div>
